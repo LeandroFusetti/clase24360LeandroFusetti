@@ -16,11 +16,11 @@ class Producto {
 const ListaProductos = []
 
 ListaProductos.push  (new Producto ("Palo y Escoba Condor", 1776, 1, 1,"../img/escobaPalaCondor.jpg"))
-ListaProductos.push (new Producto ("Pala Sanitaria", 5125, 1, 2, "../img/palaSanitaria(4260)Italimpia.jpg"))
+ListaProductos.push (new Producto ("Pala Sanitaria Condor", 5125, 1, 2, "../img/palaSanitaria(4260)Italimpia.jpg"))
 ListaProductos.push  (new Producto ("Paño Microfibra Pm400 Italimpia", 950, 1, 3, "../img/pañoMicrofibra.jpg"))
 ListaProductos.push (new Producto ("Cesto Ventilado Redondo", 1500, 1, 4, "../img/cestoMultiusoVentiladoRedondo.jpg"))
 ListaProductos.push (new Producto ("Balde Trapeador Escurridor", 3500, 1, 5, "../img/baldeTrapeadorEscurridor.jpg"))
-ListaProductos.push (new Producto ("Escoba Amerimax", 242, 1, 6, "../img/escobaAmerimaxPlastica.jpg" ))
+ListaProductos.push (new Producto ("Escoba Amerimax por unidad", 242, 1, 6, "../img/escobaAmerimaxPlastica.jpg" ))
 ListaProductos.push (new Producto ("Paños Montimer por unidad", 145, 1, 7,"../img/pañoMontimer.jpg"  ))
 ListaProductos.push (new Producto ("Cabo Fibra De Vidrio Italimpia", 5125, 1, 8, "../img/caboDeFibraDeVidrio(1055)Italimpia.jpg"))
 
@@ -34,134 +34,110 @@ ListaProductos.push (new Producto ("Alcohol Etílico al 70%", 829, 1, 15,"../img
 ListaProductos.push (new Producto ("Procenex y Lysoform", 680, 1, 16, "../img/comboLimpieza.jpg"))
 
 
-
+ let carrito = [];
+ let carritoSinDuplicados= []
     
-//Carrito de compras
-const carrito = []
-const totalcarrito = []
-
-
-// variables del carrito y suma
-
-
-
-
-let totalGlobal = 0
-let contador = 0
-
-
+    
+ const carritoHTML = document.querySelector("#carrito");
+ const miLocalStorage = window.localStorage;  
+    
 $(document).ready(function(){
-    
-    $("#local").on("click",agregar)
-        
-        function agregar(e){
 
-            if(e.target.classList.contains("btn")){
-                    // Item clickeado
-                    let seleccionado =  ListaProductos.find(producto => producto.id == e.target.id)
+    cargarCarritoDeLocalStorage();
+    crearProductos();
+    crarCarrito();
 
-                    // Arrayd con precios de los articulos repetidos añadidos al carrito
-                    totalcarrito.push(seleccionado.precio)
-                    console.log(totalcarrito);
+    function crearProductos() {
+        for(producto of ListaProductos) {
+            $("#items").append(` 
+            <div class="card; col-sm-3">
+            <div class="card-body">
+            <h4> ${producto.nombre} </h4>
+            <img src="${producto.img}" width="200px" height="200px"></img>
+            <p> Precio: ${producto.precio} </p>                   
+            <button class="btn btn-primary sumarCarrito" id-btn="${producto.id}" >Comprar</button>
+            </div>
+            </div>`
+            ) 
+            $("#items").css({
+                "display": "flex",  "height": "60%", "width": "60%", "flex-wrap": "wrap", "justify-content": "center"
+            })
 
-                    // Funcion comprar
-                    calcularTotal()
-
-                    // Total en el HTML
-                    const totalhtml = document.getElementById("totalHTML")
-                    totalhtml.textContent = `Total a pagar $ ${totalGlobal}`
-                    
-
-                    // Sumar cantidad en el carrito
-                    let posicion = carrito.findIndex(enElCarrito =>  seleccionado.id == enElCarrito.id)
-                   
-
-                    if(posicion == -1){
-                        carrito.push(seleccionado)  
-                        
-                        
-                        
-                    }
-                    else{
-                        carrito[posicion].cantidad += 1
-                        
-                        
-                    }
-
-                    tienda.innerHTML = " "  
-
-                   
-                    for (const producto of carrito){
-                    
-                        $("#tienda").append(
-                                            `<div class="col-lg-3" >
-                                            <img src="${producto.img}" width="100px" height="100px"></img>
-                                            <h4> ${producto.nombre} </h4>
-                                            <p> Precio: ${producto.precio} </p>    
-                                            <p> Cantidad: ${producto.cantidad}  </p> 
-                                            <button id="borrar" class="btn btn-primary btn-lg"> - </button>     
-                                            </div>
-                                                `
-                        )
-                        
-                        /* $("#borrar").on("click",borrar)
-
-                        function borrar(){
-                            console.log("apretado");
-                        } */
-                    }
-                    
-                 
-            }
-           
-
-            
-
-
-
-
-
-// Boton limpiar carrito
-            
-                if(e.target.classList.contains("limpiarcarrito")){
-                    $("#tienda").empty()
-                    tienda.textContent = " "
-                    carrito= []
-                    totalcarrito = []
-                    console.log(carrito);
-
-                    
-                    
-                    }
-
-                    
-                    
-            
-                    
-            
-//Json de carrito 
-
-                    const productosEnJson= JSON.stringify(carrito)
-                    localStorage.setItem("productos" ,productosEnJson)
-            
-                    const carritoComprado =  JSON.parse(localStorage.getItem("productos"))
-                    console.log(carritoComprado);
-                
-                
-               
-        }
-        
-        
+            let botones =document.getElementById("items")
+            botones.addEventListener ("click", agregarAlCarrito)  
+        };
     }
-    
-)
 
+    // Sumar al Carrito
+    function agregarAlCarrito(e) {
+        
+        carrito.push(e.target.getAttribute("id-btn"))
+        crarCarrito();
+        guardarCarritoEnLocalStorage();
+    }
 
-console.log(totalcarrito);
+    // Crear Carrito
+    function crarCarrito() {
+       
+        carritoHTML.textContent = " ";
+        const carritoSinDuplicados = [...new Set(carrito)];
 
+        carritoSinDuplicados.forEach((item) => {
+            const miItem = ListaProductos.filter((itemProductos) => {
+                return itemProductos.id === parseInt(item);
+                
+            });
+            const numeroUnidadesItem = carrito.reduce((total, itemId) => {
+                 return itemId === item ? total += 1 : total; 
+            }, 0);
+            
+            // Lista del carrito
+            $("#carrito").append(
+            ` 
+            <ul>
+            <li class="list-group-item text-right mx-2" style="text-align: center; font-size: 1.2rem;
+            font-weight: 900">${numeroUnidadesItem} x ${miItem[0].nombre} - $${miItem[0].precio}
+            </li>
+            </ul>
+            `
+            )
+             $("#carrito").css({
+                "height": "60%", "width": "60%", 
+            })
+        });
+        // Total en el HTML
+        const totalHtml = document.querySelector("#total");
+        totalHtml.textContent = calcularTotal();
+    }
 
-function calcularTotal(){
-    const reducer = (x, y) => x + y
-    totalGlobal = totalcarrito.reduce(reducer)
-    console.log(totalGlobal);
-}
+    // Calcular Total
+    function calcularTotal() {
+
+        return carrito.reduce((total, item) => {
+            const miItem = ListaProductos.filter((itemProductos) => {
+                return itemProductos.id === parseInt(item);
+            });
+            return total + miItem[0].precio;
+        }, 0);
+    }
+
+    // Vaciar carrito
+    const botonVaciar = document.querySelector("#botonVaciar");
+    botonVaciar.addEventListener("click", vaciarCarrito);
+
+    function vaciarCarrito() {
+        carrito = [];
+        crarCarrito();
+        localStorage.clear();
+    }
+
+    function guardarCarritoEnLocalStorage () {
+        miLocalStorage.setItem("carrito", JSON.stringify(carrito));
+    }
+
+    function cargarCarritoDeLocalStorage () {
+        if (miLocalStorage.getItem("carrito") !== null) {
+            carrito = JSON.parse(miLocalStorage.getItem("carrito"));
+        }
+    }
+});
