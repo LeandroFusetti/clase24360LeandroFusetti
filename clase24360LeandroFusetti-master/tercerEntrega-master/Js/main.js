@@ -10,9 +10,9 @@ fetch('../listaProductos.json')
     
 $(document).ready(function(){
 
-    cargarCarritoDeLocalStorage();
     crearProductos();
-    crarCarrito();
+    crearCarrito();
+    cargarCarritoDeLocalStorage();
 
     function crearProductos() {
         for(producto of listaProductos) {
@@ -45,12 +45,12 @@ $(document).ready(function(){
     function agregarAlCarrito(e) {
         
         carrito.push(e.target.getAttribute("id-btn"))
-        crarCarrito();
+        crearCarrito();
         guardarCarritoEnLocalStorage();
     }
 
     // Crear Carrito
-    function crarCarrito() {
+    function crearCarrito() {
        
         carritoHTML.textContent = " ";
         const carritoSinDuplicados = [...new Set(carrito)];
@@ -100,7 +100,7 @@ $(document).ready(function(){
 
     function vaciarCarrito() {
         carrito = [];
-        crarCarrito();
+        crearCarrito();
         localStorage.clear();
     }
 
