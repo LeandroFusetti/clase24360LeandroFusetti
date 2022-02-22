@@ -1,0 +1,38 @@
+@import "./variables";
+main form{
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    
+    border: solid 1px rgb(202, 200, 200);
+    @include movil{
+        width: 100%;    
+    }  
+}
+
+.formulario{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    
+}
+
+.contactanos{
+    display: flex;
+    justify-content: center;
+    & h3{
+        background-color: rgb(189, 218, 253);
+        border: solid 3px rgb(202, 200, 200);
+        text-align: center;  
+        color:$blue;
+        margin: 20px;
+        width: 52%;  
+        text-transform: uppercase;
+        font-size: 1.5rem;
+        font-weight: 900;
+        
+    }
+    
+}
+
