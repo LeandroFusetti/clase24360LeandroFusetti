@@ -1,0 +1,52 @@
+@import "./variables";
+
+.main-promociones{
+    
+    width: 100%;
+}
+.article{
+    display: flex;
+    flex-direction: column;
+    
+    align-items: center;
+    
+    width: 100%;
+    
+    &__section{
+        display: flex;
+        flex-direction: row;
+        width: 800px;
+        align-items: center;
+        text-align: center;
+        background-color: rgb(199, 219, 243);
+        padding: 10px;
+        margin: 0px;
+
+        @include movil{
+            display: flex;
+            flex-direction: column; 
+            width: 100%;      
+            }
+        &__div--texto{
+            width: 100%;
+        }
+    }
+   
+} 
+
+
+
+
+p {
+     font-size: 1.25rem;
+     word-spacing: 1px;
+     font-weight: 900;;
+    
+ }
+
+ .letrasPromocion{
+    font-size: 2.2rem;
+    font-weight: 900;
+    color: #2038B9;
+   
+ }

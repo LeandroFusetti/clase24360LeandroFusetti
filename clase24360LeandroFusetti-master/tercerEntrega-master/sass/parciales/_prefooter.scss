@@ -1,0 +1,30 @@
+@import "./variables"; 
+@import "./media-queries";
+
+.prefooter{
+    background-color: rgb(189, 218, 253);
+    text-align: center;
+    border-top: solid 2px rgb(207, 205, 205); 
+    @include movil{
+        display: none;
+    }
+    
+    &__h3{
+        color: $blue;
+        font-weight: 700;
+        font-size: 2rem;
+        margin: 60px;
+    }
+    &__icons{     
+        display: flex;
+        justify-content: space-evenly;
+       
+        p {
+            font-weight: 700;
+            font-size: 2rem;
+            color: $blue;
+            padding-bottom: 30px ;
+        }
+    }
+
+}
